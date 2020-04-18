@@ -1,5 +1,5 @@
-This is a heading.
------------------
+#This is a heading.
+
 Double asterisks indicate words written in **bold**.
 Underscores indicate _italic font_.
 1. First item
