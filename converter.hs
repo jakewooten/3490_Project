@@ -1,4 +1,7 @@
 import Data.Char
+import System.IO  
+import System.Directory  
+import Data.List 
 --main = do
 --    text <- readFile "markdown.md"
 --    let cases = lines text
@@ -18,20 +21,52 @@ headerOne (x:xs)
     | take 2 (x:xs) == "##" = "<h2>" ++ drop 1 xs ++ "</h2>"
     | otherwise = "<h1>" ++ xs ++ "</h1>"
 
---this will be passed the indicating symbol (- or =) to determine what kind of header it will be
-headerTwo :: Char -> String -> String
-headerTwo x y 
-    | x == '=' = "<h1>" ++ y ++ "</h1>"
-    | x == '-' = "<h2>" ++ y ++ "</h2>"
 
 --function will be passes a string that will have the number of markers at the beginning and end of the line already checked
-bold :: String -> String
-bold (x:xs) = "<p><strong>" ++ drop 1 (init (init xs)) ++ "</p></strong>"
+asterisk :: String -> String
+asterisk (x:xs) 
+    | take 2 (x:xs) == "**"  && drop (length xs - 2) xs ==  "**" = "<p><strong>" ++ drop 1 (init (init xs)) ++ "</p></strong>"
+    | take 1 (x:xs) == "*" && drop (length xs - 1) xs == "*" = "<p><em>" ++ init xs ++ "</p></em>"
+    | otherwise = x:xs
 
-italics :: String -> String
-italics (x:xs) = "<p><em>" ++ drop 1 (init xs) ++ "</p></em>"
+underscore :: String -> String
+underscore (x:xs)
+    | take 2 (x:xs) == "__" && drop (length xs - 2) xs == "__" = "<p><strong>" ++ drop 1 (init (init xs)) ++ "</p></strong>"
+    | take 1 (x:xs) == "_" && drop (length xs - 1) xs == "_" = "<p><em>" ++ init xs ++ "</p></em>"
+    | otherwise = x:xs
 
 strike :: String -> String
 strike (x:xs) = "<p><s>" ++ drop 1 (init (init xs)) ++ "</p></s>"
 
+link :: String -> String
+link (x:xs) = "<p><a href='" ++ init xs ++ "></a></p>"
 
+
+readDataFrom fileHandle = 
+    do 
+        isFileEnd <- hIsEOF fileHandle
+        if isFileEnd 
+            then
+                return ("")
+            else
+                do
+                    info <- hGetLine  fileHandle
+                    if take 1 info == "#"
+                        then putStrLn (headerOne info) 
+                        else return()
+                    if take 1 info == "*" 
+                        then putStrLn(asterisk info)
+                        else return()
+                    if take 1 info == "_"
+                        then putStrLn(underscore info)
+                        else return()
+                    readDataFrom fileHandle
+
+
+main = 
+    do
+        putStrLn "Enter file name (Including full path) to read"
+        fileName <- getLine
+        fileHandle <- openFile fileName ReadMode
+
+        readDataFrom fileHandle

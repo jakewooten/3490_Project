@@ -1,4 +1,4 @@
-#This is a heading.
+#This is a cool heading.
 
 Double asterisks indicate words written in **bold**.
 Underscores indicate _italic font_.
