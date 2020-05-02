@@ -5,3 +5,6 @@ __Double underscore__
 _Single underscore_
 **double asterisk**
 *single asterisk*
+~~strikethrough~~
+<link.com>
+![image](www.image.png)

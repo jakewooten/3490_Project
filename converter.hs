@@ -36,11 +36,21 @@ underscore (x:xs)
     | otherwise = x:xs
 
 strike :: String -> String
-strike (x:xs) = "<p><s>" ++ drop 1 (init (init xs)) ++ "</p></s>"
+strike (x:xs) 
+    | drop (length xs - 2) xs == "~~" =  "<p><s>" ++ drop 1 (init (init xs)) ++ "</p></s>"
+    | otherwise = x:xs
 
 link :: String -> String
-link (x:xs) = "<p><a href='" ++ init xs ++ "></a></p>"
+link (x:xs) 
+    | drop (length xs - 1) xs == ">" = "<p><a href='" ++ init xs ++ "></a></p>"
+    | otherwise = x:xs
 
+image :: String -> String
+image (x:xs) = "<p><img src = "take (imgHelper x:xs) (drop 2 x:xs))
+
+--use take to get the second bookmark of image alt feild
+imgHelper :: String -> Maybe Int
+imgHelper (x:xs) = elemIndex ']' x:xs
 
 readDataFrom fileHandle = 
     do 
@@ -59,6 +69,15 @@ readDataFrom fileHandle =
                         else return()
                     if take 1 info == "_"
                         then putStrLn(underscore info)
+                        else return()
+                    if take 2 info == "~~"
+                        then putStrLn (strike info)
+                        else return()
+                    if take 1 info == "<"
+                        then putStrLn (link info)
+                        else return ()
+                    if take 2 info == "!["
+                        then putStrLn (image info)
                         else return()
                     readDataFrom fileHandle
 
