@@ -1,4 +1,4 @@
-import Data.Char
+import Data.Char (isSpace)
 import System.IO  
 import System.Directory  
 import Data.List 
@@ -22,7 +22,24 @@ headerOne (x:xs)
     | otherwise = "<h1>" ++ xs ++ "</h1>"
 
 
---function will be passes a string that will have the number of markers at the beginning and end of the line already checked
+unorderedList :: String -> String
+unorderedList (x:xs)
+    | (x:xs) !! 0 == '*' || (x:xs) !! 0 == '-' || (x:xs) !! 0 == '+' = "<ul><li>" ++ drop 1 xs ++ "</li></ul>"
+    | (x:xs) !! 2 == '*' || (x:xs) !! 2 == '-' || (x:xs) !! 2 == '+' = "<ul><ul><li>" ++ drop 3 xs ++ "</li></ul></ul>" 
+    | (x:xs) !! 4 == '*' || (x:xs) !! 4 == '-' || (x:xs) !! 4 == '+' = "<ul><ul><ul><li>" ++ drop 5 xs ++ "</li></ul></ul></ul>"
+    | (x:xs) !! 6 == '*' || (x:xs) !! 6 == '-' || (x:xs) !! 6 == '+' = "<ul><ul><ul><ul><li>" ++ drop 7 xs ++ "</li></ul></ul></ul></ul>"
+    | (x:xs) !! 8 == '*' || (x:xs) !! 8 == '-' || (x:xs) !! 8 == '+' = "<ul><ul><ul><ul><ul><li>" ++ drop 9 xs ++ "</li></ul></ul></ul></ul></ul>"
+    | otherwise = x:xs
+
+
+checkList :: String -> Bool
+checkList (x:xs)
+    | take 2 (trim (x:xs)) == "+ " = True
+    | take 2 (trim (x:xs)) == "* " = True
+    | take 2 (trim (x:xs)) == "- " = True
+    | otherwise = False
+
+
 asterisk :: String -> String
 asterisk (x:xs) 
     | take 2 (x:xs) == "**"  && drop (length xs - 2) xs ==  "**" = "<p><strong>" ++ drop 1 (init (init xs)) ++ "</p></strong>"
@@ -46,7 +63,7 @@ link (x:xs)
     | otherwise = x:xs
 
 image :: String -> String
-image (x:xs) = "<p><img src = \"" ++ drop 1 (getImgLink (x:xs)) ++ "\" " ++ "alt= \"" ++ imgAlt (x:xs) ++ "\">"
+image (x:xs) = "<p><img src = \"" ++ drop 1 (getImgLink xs) ++ "\" " ++ "alt= \"" ++ imgAlt (x:xs) ++ "\">"
 
 
 getImgLink :: String -> String
@@ -55,6 +72,11 @@ getImgLink (x:xs) = drop (head (elemIndices '(' (x:xs))) (init (x:xs))
 
 imgAlt :: String -> String
 imgAlt (x:xs) = drop 2 (take (head (elemIndices ']' (x:xs))) (x:xs))
+
+trim :: String -> String
+trim = dropWhileEnd isSpace . dropWhile isSpace
+
+
 
 readDataFrom fileHandle = 
     do 
@@ -66,9 +88,9 @@ readDataFrom fileHandle =
                 do
                     info <- hGetLine  fileHandle
                     if take 1 info == "#"
-                        then putStrLn (headerOne info) 
+                        then putStrLn(headerOne info) 
                         else return()
-                    if take 1 info == "*" 
+                    if tail info == "*" 
                         then putStrLn(asterisk info)
                         else return()
                     if take 1 info == "_"
@@ -82,6 +104,9 @@ readDataFrom fileHandle =
                         else return ()
                     if take 2 info == "!["
                         then putStrLn (image info)
+                        else return()
+                    if checkList (trim info) == True
+                        then putStrLn (unorderedList info)
                         else return()
                     readDataFrom fileHandle
 
