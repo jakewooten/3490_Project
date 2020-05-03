@@ -137,7 +137,7 @@ main =
     do
         writeFile "markdown.html" ""
         
-        putStrLn "Enter file name (Including full path) to read"
+        putStrLn "Enter file name to be converted to html: "
         fileName <- getLine
 
         fileHandle <- openFile fileName ReadMode
