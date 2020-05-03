@@ -7,7 +7,7 @@ _Single underscore_
 *single asterisk*
 ~~strikethrough~~
 <link.com>
-![image](www.image.png)
+![ludicolo](https://www.pikpng.com/pngl/m/353-3537083_image-ludicolo-ag-anime-png-pok-mon-.png)
   + fjkdasljkfdsalfjkdsalfjkd
     * jfkdaslfjkdsaljkfdsla
     * jfkdaslfjkdsaljkfdsla
@@ -22,3 +22,6 @@ _Single underscore_
   - jfkdlsa;fjkals
     - other nested list
 * dont do that thing again
+1. number 1
+2. number 2
+3. number 3
