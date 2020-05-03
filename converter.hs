@@ -1,7 +1,8 @@
 import Data.Char (isSpace)
 import System.IO  
 import System.Directory  
-import Data.List 
+import Data.List
+import Data.Char 
 --main = do
 --    text <- readFile "markdown.md"
 --    let cases = lines text
@@ -55,7 +56,9 @@ checkNumList (x:xs)
 numList :: String -> String
 numList (x:xs)
     | x == '1' = "</ol><ol><li>" ++ drop 1 xs ++ "</li>\n"
-    | otherwise = "<li>" ++ drop ( head (elemIndices '.' (x:xs))) (xs) ++ "</li>\n"
+    | isDigit ((x:xs) !! 0) == True  = "<li>" ++ drop ( head (elemIndices '.' (x:xs))) (xs) ++ "</li>\n"
+    | isDigit ((x:xs) !! 1) == True  = "<li>" ++ drop ( head (elemIndices '.' (x:xs))) (xs) ++ "</li>\n"
+    | otherwise = x:xs
 
 asterisk :: String -> String
 asterisk (x:xs) 
