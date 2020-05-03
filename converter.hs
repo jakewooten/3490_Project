@@ -4,7 +4,7 @@ import System.Directory
 import Data.List
 import Data.Char 
 --main = do
---    text <- readFile "markdown.md"
+--    text <- readFile "mark.md"
 --    let cases = lines text
 --        writeFile "md_to_html.html"
 
@@ -106,7 +106,7 @@ readDataFrom fileHandle =
                 return ("")
             else
                 do
-                    info <- hGetLine  fileHandle
+                    info <- hGetLine fileHandle
                     if take 1 info == "#"
                         then appendFile "markdown.html" (headerOne info) 
                         else return()
@@ -129,16 +129,21 @@ readDataFrom fileHandle =
                         then appendFile "markdown.html" (unorderedList info)
                         else return()
                     if checkNumList info == True
-                        then appendFile "markdown.html" (numList info)
+                        then appendFile "num.html" (numList info)
                         else return()
                     readDataFrom fileHandle 
-
 
 main = 
     do
         writeFile "markdown.html" ""
+        
         putStrLn "Enter file name (Including full path) to read"
         fileName <- getLine
 
         fileHandle <- openFile fileName ReadMode
         readDataFrom fileHandle
+        
+        appendFile "num.html" "</ol>\n"
+        file2 <- readFile "num.html"
+        appendFile "markdown.html" file2
+        removeFile "num.html"
