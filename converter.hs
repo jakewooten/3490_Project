@@ -46,11 +46,15 @@ link (x:xs)
     | otherwise = x:xs
 
 image :: String -> String
-image (x:xs) = "<p><img src = "take (imgHelper x:xs) (drop 2 x:xs))
+image (x:xs) = "<p><img src = \"" ++ drop 1 (getImgLink (x:xs)) ++ "\" " ++ "alt= \"" ++ imgAlt (x:xs) ++ "\">"
 
+
+getImgLink :: String -> String
+getImgLink (x:xs) = drop (head (elemIndices '(' (x:xs))) (init (x:xs))
 --use take to get the second bookmark of image alt feild
-imgHelper :: String -> Maybe Int
-imgHelper (x:xs) = elemIndex ']' x:xs
+
+imgAlt :: String -> String
+imgAlt (x:xs) = drop 2 (take (head (elemIndices ']' (x:xs))) (x:xs))
 
 readDataFrom fileHandle = 
     do 
