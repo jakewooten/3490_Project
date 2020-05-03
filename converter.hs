@@ -3,15 +3,7 @@ import System.IO
 import System.Directory  
 import Data.List
 import Data.Char 
---main = do
---    text <- readFile "mark.md"
---    let cases = lines text
---        writeFile "md_to_html.html"
 
---strTrim wakes white space off both ends of the string!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
---data Mk = 
---make sure all whitespace on the line has been delt with before this function is executed
 headerOne :: String -> String
 headerOne (x:xs)
     | take 7 (x:xs) == "#######" = x:xs
